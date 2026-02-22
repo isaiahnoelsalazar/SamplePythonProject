@@ -4,6 +4,8 @@ import cv2
 import numpy as np
 import mss
 import socket
+import os
+import signal
 
 app = Flask(__name__)
 
@@ -105,11 +107,16 @@ def video():
 
 @app.route('/health')
 def health():
-    # return "screen-share-active"
     return {
         "status": "online",
         "name": socket.gethostname()
     }
+
+
+@app.route('/end')
+def end():
+    os.kill(os.getpid(), signal.SIGINT)
+    return "end"
 
 
 if __name__ == '__main__':
