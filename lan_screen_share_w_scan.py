@@ -40,39 +40,87 @@ def generate_frames():
 
 @app.route('/')
 def index():
-    return f"""
+    return """
     <html>
     <head>
         <title>Remote Control</title>
+        <style>
+            html, body {
+                margin:0;
+                background:black;
+                height:100%;
+                overflow:hidden;
+                display:flex;
+                justify-content:center;
+                align-items:center;
+            }
+
+            #screen {
+                max-width:100%;
+                max-height:100%;
+                object-fit:contain;
+            }
+        </style>
     </head>
-    <body style="margin:0; overflow:hidden;">
-        <img id="screen" src="/video" width="100%">
+    <body>
+        <img id="screen" src="/video">
 
         <script>
         const img = document.getElementById("screen");
 
-        // Mouse Click
-        img.addEventListener("click", function(e) {{
+        img.addEventListener("click", function(e) {
             const rect = img.getBoundingClientRect();
-            const x = (e.clientX - rect.left) * (img.naturalWidth / rect.width);
-            const y = (e.clientY - rect.top) * (img.naturalHeight / rect.height);
+            const scaleX = img.naturalWidth / rect.width;
+            const scaleY = img.naturalHeight / rect.height;
 
-            fetch("/control", {{
-                method: "POST",
-                headers: {{ "Content-Type": "application/json" }},
-                body: JSON.stringify({{ action: "click", x: x, y: y }})
-            }});
-        }});
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
 
-        // Keyboard
-        document.addEventListener("keydown", function(e) {{
-            fetch("/control", {{
+            fetch("/control", {
                 method: "POST",
-                headers: {{ "Content-Type": "application/json" }},
-                body: JSON.stringify({{ action: "key", key: e.key }})
-            }});
-        }});
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: "click", x: x, y: y })
+            });
+        });
+
+        document.addEventListener("keydown", function(e) {
+            fetch("/control", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: "key", key: e.key })
+            });
+        });
         </script>
+    </body>
+    </html>
+    """
+
+
+@app.route('/no-control')
+def no_control():
+    return """
+    <html>
+    <head>
+        <style>
+            html, body {
+                margin:0;
+                background:black;
+                height:100%;
+                overflow:hidden;
+                display:flex;
+                justify-content:center;
+                align-items:center;
+            }
+
+            img {
+                max-width:100%;
+                max-height:100%;
+                object-fit:contain;
+            }
+        </style>
+    </head>
+    <body>
+        <img src="/video">
     </body>
     </html>
     """

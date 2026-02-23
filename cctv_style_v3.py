@@ -141,7 +141,7 @@ img{
     display:block;
 }
 
-.modal{
+.modal {
     display:none;
     position:fixed;
     top:0;
@@ -150,9 +150,12 @@ img{
     height:100%;
     background:black;
     z-index:100;
+    justify-content:center;
+    align-items:center;
 }
 
-.modal iframe{
+.modal iframe {
+    width:100%;
     height:100%;
     border:none;
 }
@@ -165,11 +168,6 @@ img{
     color:white;
     cursor:pointer;
     z-index:101;
-}
-@media screen and (min-width: 768px){
-    .modal iframe{
-        width:100%;
-    }
 }
 </style>
 </head>
@@ -237,10 +235,10 @@ function openDevice(ip){
     if(controlMode){
         frame.src = `http://${ip}:5000/`;
     } else {
-        frame.src = `http://${ip}:5000/video`;
+        frame.src = `http://${ip}:5000/no-control`;
     }
 
-    modal.style.display = "block";
+    modal.style.display = "flex";
 }
 
 function closeModal(){
